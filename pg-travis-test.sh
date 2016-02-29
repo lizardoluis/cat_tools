@@ -21,5 +21,6 @@ sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-co
 
 status=0
 sudo pg_createcluster --start $PGVERSION test -p 55435 -- -A trust
-make test PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config || status=$?
-exit $status
+make test PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config
+
+[ ! -e test/regression.diffs ]
