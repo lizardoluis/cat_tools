@@ -6,6 +6,8 @@ CREATE OR REPLACE VIEW _cat_tools.pg_class_v AS
     FROM pg_class c
       LEFT JOIN pg_namespace n ON( n.oid = c.relnamespace )
 ;
+REVOKE ALL ON _cat_tools.pg_class_v FROM public;
+
 CREATE OR REPLACE VIEW cat_tools.pg_class_v AS
   SELECT *
     FROM _cat_tools.pg_class_v
@@ -27,6 +29,7 @@ CREATE OR REPLACE VIEW _cat_tools.pg_attribute_v AS
       LEFT JOIN _cat_tools.pg_class_v c ON ( c.reloid = a.attrelid )
       LEFT JOIN pg_type t ON ( t.oid = a.atttypid )
 ;
+REVOKE ALL ON _cat_tools.pg_attribute_v FROM public;
 
 CREATE OR REPLACE VIEW _cat_tools.column AS
   SELECT *
@@ -51,6 +54,8 @@ CREATE OR REPLACE VIEW _cat_tools.column AS
         ON ( reloid = pk.conrelid )
           AND pk.contype = 'p'
 ;
+REVOKE ALL ON _cat_tools.column FROM public;
+
 CREATE OR REPLACE VIEW cat_tools.column AS
   SELECT *
     FROM _cat_tools.column
