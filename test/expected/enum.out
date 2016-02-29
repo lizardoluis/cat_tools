@@ -1,0 +1,6 @@
+\set ECHO none
+1..3
+ok 1 - Create test enum
+ok 2
+ok 3 - Drop test enum
+# TRANSACTION INTENTIONALLY LEFT OPEN!
