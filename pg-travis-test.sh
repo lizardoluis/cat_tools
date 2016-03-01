@@ -23,6 +23,6 @@ sudo easy_install pgxnclient
 
 sudo pg_createcluster --start $PGVERSION test -p 55435 -- -A trust
 # TODO: have base.mk support dynamic sudo
-sudo make test PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config
+sudo PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config make test
 
 [ ! -e test/regression.diffs ]
