@@ -165,6 +165,28 @@ AS
      AND _cat_tools._pg_sv_table_accessible(n1.oid, c1.oid)
 ;
 
+CREATE OR REPLACE FUNCTION cat_tools.currval(
+  table_name text
+  , column_name text
+) RETURNS bigint LANGUAGE plpgsql AS $body$
+DECLARE
+  seq regclass;
+BEGIN
+  -- Note: the function will throw an error if table or column doesn't exist
+  seq := pg_get_serial_sequence( table_name, column_name );
+
+  IF seq IS NULL THEN
+    RAISE EXCEPTION '"%" is not a serial column', column_name
+      USING ERRCODE = 'wrong_object_type'
+        -- TODO: SCHEMA and COLUMN
+        , COLUMN = column_name
+    ;
+  END IF;
+
+  RETURN currval(seq);
+END
+$body$;
+
 CREATE OR REPLACE FUNCTION cat_tools.enum_range(
     enum regtype
 ) RETURNS text[] LANGUAGE plpgsql STABLE AS $body$
@@ -188,6 +210,15 @@ CREATE OR REPLACE FUNCTION cat_tools.pg_class(
 SELECT * FROM cat_tools.pg_class_v WHERE reloid = rel
 $body$;
 
+CREATE OR REPLACE FUNCTION cat_tools.name__check(
+  name_to_check text
+) RETURNS void LANGUAGE plpgsql AS $body$
+BEGIN
+  IF name_to_check IS DISTINCT FROM name_to_check::name THEN
+    RAISE '"%" becomes "%" when cast to name', name_to_check, name_to_check::name;
+  END IF;
+END
+$body$;
 
 CREATE OR REPLACE FUNCTION cat_tools.trigger__parse(
   trigger_oid oid
