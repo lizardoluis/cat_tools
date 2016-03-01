@@ -6,7 +6,7 @@ set -eux
 
 sudo apt-get update
 
-packages="postgresql-$PGVERSION postgresql-server-dev-$PGVERSION postgresql-common"
+packages="python-setuptools postgresql-$PGVERSION postgresql-server-dev-$PGVERSION postgresql-common"
 
 # bug: http://www.postgresql.org/message-id/20130508192711.GA9243@msgid.df7cb.de
 sudo update-alternatives --remove-all postmaster.1.gz
@@ -19,7 +19,8 @@ sudo chmod a+x /etc/init.d/postgresql
 
 sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install $packages
 
-status=0
+sudo easy_install pgxnclient
+
 sudo pg_createcluster --start $PGVERSION test -p 55435 -- -A trust
 make test PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config
 
