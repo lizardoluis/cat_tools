@@ -25,10 +25,10 @@
     "maintainer": [ "Jim Nasby <Jim.Nasby@BlueTreble.com>" ],
 
     "X_comment": "Optional. Status of distribution. Allowed values: unstable, testing, stable",
-    "release_status": "testing",
+    "release_status": "stable",
 
     "X_comment": "REQUIRED. License(s) distribution is released under. http://pgxn.org/spec/#license",
-    "license": "MIT",
+    "license": "mit",
 
     "X_comment": "REQUIRED. Specifies extensions contained in this distribution. Each key is the name of an extension. http://pgxn.org/spec/#provides",
     "provides": {
@@ -71,7 +71,7 @@
 
         "build": {
             "requires": {
-                "PostgreSQL": "9.5.0"
+                "PostgreSQL": "9.3.0"
             }
         },
         "runtime": {
