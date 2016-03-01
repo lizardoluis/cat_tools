@@ -21,8 +21,9 @@ sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-co
 
 sudo easy_install pgxnclient
 
-sudo pg_createcluster --start $PGVERSION test -p 55435 -- -A trust
+PGPORT=55435 
+sudo pg_createcluster --start $PGVERSION test -p $PGPORT -- -A trust
 # TODO: have base.mk support dynamic sudo
-sudo PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config make test
+sudo PGPORT=$PGPORT PG_CONFIG=/usr/lib/postgresql/$PGVERSION/bin/pg_config make test
 
 [ ! -e test/regression.diffs ]
