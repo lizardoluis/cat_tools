@@ -3,9 +3,6 @@
 \i test/pgxntool/psql.sql
 
 BEGIN;
-
--- Tuple-only because of multiple calls to functions
---\t
 \i sql/cat_tools.sql
 
 \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
