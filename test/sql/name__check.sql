@@ -1,11 +1,26 @@
 \set ECHO none
 
-\i test/pgxntool/setup.sql
+\i test/setup.sql
 
 \set s cat_tools
 \set f name__check
 
-SELECT plan(4);
+SELECT plan(5);
+
+SET LOCAL ROLE :no_use_role;
+
+SELECT throws_ok(
+  format(
+    $$SELECT %I.%I( %L )$$
+    , :'s', :'f'
+    , 'x'
+  )
+  , '42501'
+  , NULL
+  , 'Verify public has no perms'
+);
+
+SET LOCAL ROLE :use_role;
 
 SELECT lives_ok(
   format(

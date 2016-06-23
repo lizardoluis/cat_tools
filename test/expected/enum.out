@@ -1,6 +1,7 @@
 \set ECHO none
-1..3
+1..4
 ok 1 - Create test enum
-ok 2
-ok 3 - Drop test enum
+ok 2 - Permission denied trying to run functions
+ok 3 - Permission denied trying to run functions
+ok 4
 # TRANSACTION INTENTIONALLY LEFT OPEN!

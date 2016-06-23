@@ -1,7 +1,8 @@
 \set ECHO none
-1..4
-ok 1 - Simple name
-ok 2 - Name with spaces
-ok 3 - NULL
-ok 4 - Error on overflow
+1..5
+ok 1 - Verify public has no perms
+ok 2 - Simple name
+ok 3 - Name with spaces
+ok 4 - NULL
+ok 5 - Error on overflow
 # TRANSACTION INTENTIONALLY LEFT OPEN!
