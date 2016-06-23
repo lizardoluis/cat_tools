@@ -1,6 +1,6 @@
 DO $$
 BEGIN
-  CREATE ROLE cat_tools__user NOLOGIN;
+  CREATE ROLE cat_tools__usage NOLOGIN;
 EXCEPTION WHEN duplicate_object THEN
   NULL;
 END
@@ -74,7 +74,7 @@ END
 $body$;
 
 CREATE SCHEMA cat_tools;
-GRANT USAGE ON SCHEMA cat_tools TO cat_tools__user;
+GRANT USAGE ON SCHEMA cat_tools TO cat_tools__usage;
 CREATE SCHEMA _cat_tools;
 
 CREATE OR REPLACE VIEW _cat_tools.pg_class_v AS
@@ -95,7 +95,7 @@ CREATE OR REPLACE VIEW cat_tools.pg_class_v AS
     WHERE NOT pg_is_other_temp_schema(relnamespace)
       AND relkind IN( 'r', 'v', 'f' )
 ;
-GRANT SELECT ON cat_tools.pg_class_v TO cat_tools__user;
+GRANT SELECT ON cat_tools.pg_class_v TO cat_tools__usage;
 
 CREATE OR REPLACE VIEW _cat_tools.pg_attribute_v AS
   SELECT a.*
@@ -147,7 +147,7 @@ CREATE OR REPLACE VIEW cat_tools.column AS
       )
     ORDER BY relschema, relname, attnum
 ;
-GRANT SELECT ON cat_tools.column TO cat_tools__user;
+GRANT SELECT ON cat_tools.column TO cat_tools__usage;
 
 -- Borrowed from newsysviews: http://pgfoundry.org/projects/newsysviews/
 SELECT pg_temp.create_function(
@@ -250,7 +250,7 @@ AS
      AND k1.contype = 'f'
      AND _cat_tools._pg_sv_table_accessible(n1.oid, c1.oid)
 ;
-GRANT SELECT ON cat_tools.pg_all_foreign_keys TO cat_tools__user;
+GRANT SELECT ON cat_tools.pg_all_foreign_keys TO cat_tools__usage;
 
 SELECT pg_temp.create_function(
   'cat_tools.currval'
@@ -277,7 +277,7 @@ BEGIN
   RETURN currval(seq);
 END
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -292,7 +292,7 @@ BEGIN
   RETURN ret;
 END
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -302,7 +302,7 @@ SELECT pg_temp.create_function(
   , $body$
 SELECT * FROM unnest( cat_tools.enum_range($1) ) AS r(enum_label)
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -312,7 +312,7 @@ SELECT pg_temp.create_function(
   , $body$
 SELECT * FROM cat_tools.pg_class_v WHERE reloid = rel
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -326,7 +326,7 @@ BEGIN
   END IF;
 END
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -423,7 +423,7 @@ $$v_create_stanza = "%"
   RETURN;
 END
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -440,7 +440,7 @@ $$
       AND tgname = trigger_name
   ;
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 SELECT pg_temp.create_function(
@@ -461,7 +461,7 @@ BEGIN
   RETURN v_oid;
 END
 $body$
-  , 'cat_tools__user'
+  , 'cat_tools__usage'
 );
 
 -- vi: expandtab ts=2 sw=2

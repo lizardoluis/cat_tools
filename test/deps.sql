@@ -9,5 +9,5 @@ CREATE EXTENSION cat_tools;
 CREATE ROLE :no_use_role;
 CREATE ROLE :use_role;
 
-GRANT cat_tools__user TO :use_role;
+GRANT cat_tools__usage TO :use_role;
 
