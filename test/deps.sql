@@ -1,4 +1,8 @@
 -- Note: pgTap is loaded by setup.sql
+/*
+CREATE EXTENSION cat_tools VERSION '0.1.0';
+ALTER EXTENSION cat_tools UPDATE;
+*/
 CREATE EXTENSION cat_tools;
 
 -- Add any test dependency statements here
