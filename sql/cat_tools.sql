@@ -9,9 +9,11 @@ $$;
 /*
  * NOTE: All pg_temp objects must be dropped at the end of the script!
  * Otherwise the eventual DROP CASCADE of pg_temp when the session ends will
- * also drop the extension!
+ * also drop the extension! Instead of risking problems, create our own
+ * "temporary" schema instead.
  */
-CREATE FUNCTION pg_temp.exec(
+CREATE SCHEMA __cat_tools;
+CREATE FUNCTION __cat_tools.exec(
   sql text
 ) RETURNS void LANGUAGE plpgsql AS $body$
 BEGIN
@@ -19,7 +21,7 @@ BEGIN
   EXECUTE sql;
 END
 $body$;
-CREATE FUNCTION pg_temp.create_function(
+CREATE FUNCTION __cat_tools.create_function(
   function_name text
   , args text
   , options text
@@ -51,7 +53,7 @@ $template$
   ;
 
 BEGIN
-  PERFORM pg_temp.exec( format(
+  PERFORM __cat_tools.exec( format(
       create_template
       , function_name
       , args
@@ -59,7 +61,7 @@ BEGIN
       , body
     ) )
   ;
-  PERFORM pg_temp.exec( format(
+  PERFORM __cat_tools.exec( format(
       revoke_template
       , function_name
       , args
@@ -67,7 +69,7 @@ BEGIN
   ;
 
   IF grants IS NOT NULL THEN
-    PERFORM pg_temp.exec( format(
+    PERFORM __cat_tools.exec( format(
         grant_template
         , function_name
         , args
@@ -155,7 +157,7 @@ CREATE OR REPLACE VIEW cat_tools.column AS
 GRANT SELECT ON cat_tools.column TO cat_tools__usage;
 
 -- Borrowed from newsysviews: http://pgfoundry.org/projects/newsysviews/
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   '_cat_tools._pg_sv_column_array'
   , 'OID, SMALLINT[]'
   , 'NAME[] LANGUAGE sql STABLE'
@@ -171,7 +173,7 @@ $$
 );
 
 -- Borrowed from newsysviews: http://pgfoundry.org/projects/newsysviews/
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   '_cat_tools._pg_sv_table_accessible'
   , 'OID, OID'
   , 'boolean LANGUAGE sql STABLE'
@@ -257,7 +259,7 @@ AS
 ;
 GRANT SELECT ON cat_tools.pg_all_foreign_keys TO cat_tools__usage;
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.currval'
   , $$
   table_name text
@@ -285,7 +287,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.enum_range'
   , 'enum regtype'
   , $$text[] LANGUAGE plpgsql STABLE$$
@@ -300,7 +302,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.enum_range_srf'
   , 'enum regtype'
   , $$SETOF text LANGUAGE sql$$
@@ -310,7 +312,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.pg_class'
   , 'rel regclass'
   , $$cat_tools.pg_class_v LANGUAGE sql STABLE$$
@@ -320,7 +322,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.name__check'
   , 'name_to_check text'
   , $$void LANGUAGE plpgsql$$
@@ -334,7 +336,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.trigger__parse'
   , $$
   trigger_oid oid
@@ -431,7 +433,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.trigger__get_oid__loose'
   , $$
   trigger_table regclass
@@ -448,7 +450,7 @@ $body$
   , 'cat_tools__usage'
 );
 
-SELECT pg_temp.create_function(
+SELECT __cat_tools.create_function(
   'cat_tools.trigger__get_oid'
   , $$
   trigger_table regclass
@@ -469,15 +471,16 @@ $body$
   , 'cat_tools__usage'
 );
 
-DROP FUNCTION pg_temp.exec(
+DROP FUNCTION __cat_tools.exec(
   sql text
 );
-DROP FUNCTION pg_temp.create_function(
+DROP FUNCTION __cat_tools.create_function(
   function_name text
   , args text
   , options text
   , body text
   , grants text
 );
+DROP SCHEMA __cat_tools;
 
 -- vi: expandtab ts=2 sw=2
