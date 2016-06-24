@@ -6,6 +6,11 @@ EXCEPTION WHEN duplicate_object THEN
 END
 $$;
 
+/*
+ * NOTE: All pg_temp objects must be dropped at the end of the script!
+ * Otherwise the eventual DROP CASCADE of pg_temp when the session ends will
+ * also drop the extension!
+ */
 CREATE FUNCTION pg_temp.exec(
   sql text
 ) RETURNS void LANGUAGE plpgsql AS $body$
@@ -462,6 +467,17 @@ BEGIN
 END
 $body$
   , 'cat_tools__usage'
+);
+
+DROP FUNCTION pg_temp.exec(
+  sql text
+);
+DROP FUNCTION pg_temp.create_function(
+  function_name text
+  , args text
+  , options text
+  , body text
+  , grants text
 );
 
 -- vi: expandtab ts=2 sw=2

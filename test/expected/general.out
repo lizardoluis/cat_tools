@@ -1,0 +1,4 @@
+\set ECHO none
+1..1
+ok 1 - Schema __cat_tools should not exist
+# TRANSACTION INTENTIONALLY LEFT OPEN!

@@ -13,7 +13,6 @@ GRANT SELECT ON cat_tools.pg_all_foreign_keys TO cat_tools__usage;
 
 
 -- The functions haven't actually changed, this is just the easiest way to fix the permissions
-
 CREATE FUNCTION pg_temp.exec(
   sql text
 ) RETURNS void LANGUAGE plpgsql AS $body$
@@ -326,6 +325,17 @@ BEGIN
 END
 $body$
   , 'cat_tools__usage'
+);
+
+DROP FUNCTION pg_temp.exec(
+  sql text
+);
+DROP FUNCTION pg_temp.create_function(
+  function_name text
+  , args text
+  , options text
+  , body text
+  , grants text 
 );
 
 -- vi: expandtab ts=2 sw=2
