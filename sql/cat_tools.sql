@@ -461,9 +461,12 @@ $$
 DECLARE
   v_oid oid;
 BEGIN
-  SELECT cat_tools.trigger__get_oid__loose( trigger_table, trigger_name )
-    INTO STRICT v_oid
-  ;
+  -- Note that because __loose isn't an SRF it'll always return a value
+  v_oid := cat_tools.trigger__get_oid__loose( trigger_table, trigger_name ) ;
+
+  IF v_oid IS NULL THEN
+    RAISE EXCEPTION 'trigger % on table % does not exist', trigger_name, trigger_table;
+  END IF;
 
   RETURN v_oid;
 END
