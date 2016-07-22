@@ -461,7 +461,7 @@ $$
 DECLARE
   v_oid oid;
 BEGIN
-  SELECT cat_tools.crigger__get_oid__loose( trigger_table, trigger_name )
+  SELECT cat_tools.trigger__get_oid__loose( trigger_table, trigger_name )
     INTO STRICT v_oid
   ;
 
