@@ -1,0 +1,8 @@
+\set ECHO none
+1..5
+ok 1 - Verify public has no perms
+ok 2 - Verify public has no perms
+ok 3 - Verify public has no perms
+ok 4 - loose returns NULL for missing trigger
+ok 5 - threw trigger "test trigger" on table "test table" does not exist
+# TRANSACTION INTENTIONALLY LEFT OPEN!
