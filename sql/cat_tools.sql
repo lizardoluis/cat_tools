@@ -345,7 +345,7 @@ SELECT __cat_tools.create_function(
   , OUT defer text
   , OUT row_statement text
   , OUT when_clause text
-  , OUT function_arguments text
+  , OUT function_arguments text[]
   , OUT function_name text
   , OUT table_name text
 $$
@@ -408,7 +408,7 @@ BEGIN
   -- Get function arguments
   v_execute_clause := ' EXECUTE PROCEDURE ' || r_trigger.tgfoid::regproc || E'\\(';
   v_array := regexp_split_to_array( v_work, v_execute_clause );
-  function_arguments := rtrim( v_array[2], ')' ); -- Yank trailing )
+  function_arguments :=  array_remove(regexp_split_to_array(rtrim( v_array[2], ')' ), '\W+'), '');
 
   -- Get everything prior to EXECUTE PROCEDURE ...
   v_work := v_array[1];
